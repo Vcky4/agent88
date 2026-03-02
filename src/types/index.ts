@@ -10,7 +10,7 @@ export interface Message {
 }
 
 export interface MemoryAdapter {
-    save(message: Message): Promise<void>
+    save(contextId: string, message: Message): Promise<void>
     load(contextId: string): Promise<Message[]>
 }
 

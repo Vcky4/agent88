@@ -1,14 +1,42 @@
-import type { BaseModel } from "../models/BaseModel.js";
+import type { BaseModel, ModelResponse } from "../models/BaseModel.js";
 import { ToolExecutor } from "./ToolExecutor.js";
 import type { ExecutionContext } from "./ExecutionContext.js";
+import type { Middleware } from "./Middleware.js";
 
 export class ExecutionEngine {
+    private middlewares: Middleware[] = [];
+
     constructor(
         private model: BaseModel,
         private toolExecutor: ToolExecutor
     ) { }
 
-    async run(context: ExecutionContext) {
+    use(middleware: Middleware) {
+        this.middlewares.push(middleware);
+    }
+
+    async run(context: ExecutionContext): Promise<ModelResponse> {
+        let index = -1;
+
+        const dispatch = async (i: number): Promise<void> => {
+            if (i <= index) throw new Error("next() called multiple times");
+            index = i;
+
+            if (i < this.middlewares.length) {
+                const middleware = this.middlewares[i]!;
+                await middleware(context, () => dispatch(i + 1));
+            } else {
+                // Base core loop
+                const response = await this.coreLoop(context);
+                context.response = response;
+            }
+        };
+
+        await dispatch(0);
+        return context.response!;
+    }
+
+    private async coreLoop(context: ExecutionContext): Promise<ModelResponse> {
         let iterations = 0;
         const max = context.maxIterations ?? 5;
 

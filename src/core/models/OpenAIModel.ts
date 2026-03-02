@@ -59,12 +59,9 @@ export class OpenAIModel implements BaseModel {
             function: {
                 name: tool.name,
                 description: tool.description,
-                parameters: {
+                parameters: tool.parameters ?? {
                     type: "object",
-                    properties: {
-                        text: { type: "string" },
-                        location: { type: "string" }
-                    },
+                    properties: {},
                     additionalProperties: true
                 }
             }

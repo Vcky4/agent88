@@ -16,4 +16,5 @@ export interface ModelGenerateOptions {
 
 export interface BaseModel {
     generate(options: ModelGenerateOptions): Promise<ModelResponse>
+    generateStream?(options: ModelGenerateOptions): AsyncGenerator<string>
 }

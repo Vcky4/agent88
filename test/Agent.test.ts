@@ -2,8 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { Agent } from '../src/core/Agent.js';
 import { MockModel } from '../src/core/models/MockModel.js';
 import type { Tool } from '../src/core/tools/Tool.js';
-import type { BaseMemory } from '../src/core/memory/BaseMemory.js';
-import type { Message } from '../src/types/index.js';
+import type { Message, MemoryAdapter } from '../src/types/index.js';
 
 describe('Agent API', () => {
     it('should correctly orchestrate a simple user request without tools or memory', async () => {
@@ -69,13 +68,13 @@ describe('Agent API', () => {
         ]);
 
         // Define a simple mock memory class inline for this test
-        class InMemoryMock implements BaseMemory {
+        class InMemoryMock implements MemoryAdapter {
             store: Message[] = [
                 { role: "user", content: "Previous message" },
                 { role: "assistant", content: "Previous response" }
             ];
 
-            async save(msg: Message) {
+            async save(contextId: string, msg: Message) {
                 this.store.push(msg);
             }
 

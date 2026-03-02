@@ -18,6 +18,13 @@ async function run() {
     agent.registerTool({
         name: "echo",
         description: "Echo input",
+        parameters: {
+            type: "object",
+            properties: {
+                text: { type: "string" }
+            },
+            required: ["text"]
+        },
         async execute(input: any) {
             console.log(">>> TOOL EXECUTED WITH:", input);
             return `Echoed: ${input.text}`;

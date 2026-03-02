@@ -82,13 +82,20 @@ describe('OpenAIModel Adapter', () => {
             { role: 'user', content: 'What is the weather in London?' }
         ];
 
-        const tools: Tool[] = [{
-            name: 'getWeather',
-            description: 'Get weather for a city',
-            execute: async () => 'Rainy'
-        }];
-
-        const options: ModelGenerateOptions = { messages, tools };
+        const inputTools: Tool[] = [
+            {
+                name: 'getWeather',
+                description: 'Get weather for a city',
+                parameters: {
+                    type: 'object',
+                    properties: {
+                        city: { type: 'string' }
+                    }
+                },
+                execute: async () => 'Warm'
+            }
+        ];
+        const options: ModelGenerateOptions = { messages, tools: inputTools };
 
         const response = await model.generate(options);
 
@@ -108,10 +115,8 @@ describe('OpenAIModel Adapter', () => {
                         parameters: expect.objectContaining({
                             type: 'object',
                             properties: {
-                                text: { type: 'string' },
-                                location: { type: 'string' }
-                            },
-                            additionalProperties: true
+                                city: { type: 'string' }
+                            }
                         })
                     })
                 })
