@@ -13,10 +13,11 @@ Agent88 is an open-source AI infrastructure framework designed to help developer
 Agent88 abstracts the heavy lifting so you can focus on building intelligence:
 - ✅ **Clean Agent API**: Simple orchestration of complex ML layers.
 - ✅ **Execution Engine Loop**: Automatically handles recursive LLM reasoning, detects intent, and controls iteration counts.
-- ✅ **Tool execution (Plugins)**: A strict Tool Registry enabling seamless multi-action tool execution within AI reasoning runs.
+- ✅ **Tool execution (Plugins)**: A strict Tool Registry enabling seamless multi-action tool execution within AI reasoning runs via robust JSONSchemas.
 - ✅ **Model Adapter Abstraction**: Decoupled from direct providers (e.g. OpenAI). Swap providers out via interfaces without refactoring downstream code.
-- ✅ **Memory Layer Abstraction**: Context-aware interactions via `MemoryAdapter` interfaces (In-Memory, Redis, DB supported concepts).
-- ⏳ **Streaming support** *(Coming Soon)*
+- ✅ **Memory Layer Abstraction**: Context-aware interactions via `MemoryAdapter` interfaces (In-Memory included, Redis/DB extensible).
+- ✅ **Streaming support**: Real-time conversational text yielding via `agent.stream()`.
+- ✅ **Middleware System**: Express/Koa style Onion routing using `agent.use()` to intercept, modify, or observe executions.
 
 ---
 
@@ -51,14 +52,13 @@ console.log(finalResponse);
 
 ---
 
-## Roadmap Tracker (Phase 4 Complete)
+## Roadmap Tracker (v0.1 Complete)
 
 - [x] Phase 1: Core Type Foundations & Abstract Layers
 - [x] Phase 2: Execution Core & Tool Executors
 - [x] Phase 3: Developer-First Public Agent API
 - [x] Phase 4: OpenAI Adapter
-- [ ] Phase 5: Memory System Plugins (Redis)
-- [ ] Phase 6: Observability, Express-Like Middlewares, and Hooks
+- [x] Phase 5: v0.1 Maturity (Memory System, Streaming, Middlewares, JSONSchemas)
 
 Check `docs/roadmap.md` and `docs/architecture.md` for our in-depth engineering blueprint.
 

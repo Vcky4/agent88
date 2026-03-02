@@ -9,7 +9,9 @@ The public API that developers interact with.
 Handles:
 * Agent lifecycle
 * Tool registration
-* Memory integration
+* Memory integration and context tracking
+* Middleware interceptors (`agent.use()`)
+* Text streaming generators (`agent.stream()`)
 * Delegating work to the Execution Engine
 
 **Design Protocol:** The Agent follows the Dependency Inversion principle. It does not run models directly, nor execute tools. Instead, it acts purely as an orchestrator tying dependencies together and resolving memory.
@@ -24,7 +26,31 @@ const agent = new Agent({
 
 agent.registerTool(searchTool);
 
-const finalResponse = await agent.run("What's the weather like?");
+const finalResponse = await agent.run("What's the weather like?", "session_123");
+
+// Streaming approach:
+const stream = agent.stream("Tell me a story", "session_123");
+for await (const chunk of stream) {
+    process.stdout.write(chunk);
+}
+```
+
+---
+
+### Middleware Pipeline
+
+Agent88 uses an Express/Koa style **Onion Routing pattern** to intercept the `ExecutionEngine`.
+
+This allows developers to securely wrap the core reasoning loop to inject system prompts, enforce guardrails, or log events *before* and *after* the model executes.
+
+```ts
+agent.use(async (ctx, next) => {
+    console.log("Before execution (Context state):", ctx.messages);
+    
+    await next(); // Await the innermost core loop
+
+    console.log("After execution (Final Result):", ctx.response);
+});
 ```
 
 ---
@@ -78,10 +104,17 @@ This layer tracks and safely executes external capabilities via tools. It consis
 * **ToolRegistry**: Manages registering tools, preventing duplicated tool names, and retrieving active tools to expose structural metadata to the execution engine.
 * **ToolExecutor**: Safely wraps and executes tool implementation logic, captures potential errors, and formats tool output seamlessly for the model.
 
+**JSON Schema Support**: Tools define a strict `parameters?: Record<string, any>` JSONSchema which is natively forwarded to the active `ModelAdapter` layer, guaranteeing models format their nested arguments rigorously.
+
 Example:
 
 ```ts
-agent.registerTool("search", async () => {})
+agent.registerTool({
+    name: "search",
+    description: "Search the web",
+    parameters: { type: "object", properties: { query: { type: "string" } } },
+    execute: async ({ query }) => `Results for ${query}...`
+});
 ```
 
 ---
@@ -99,9 +132,11 @@ Supported implementations will include:
 
 ### Memory Layer
 
-The memory layer is cleanly abstracted via the `BaseMemory` and `MemoryAdapter` interfaces, allowing conversational context to be saved and loaded across LLM interactions.
+The memory layer is cleanly abstracted via the `MemoryAdapter` interface, allowing conversational context to be natively synchronized across LLM interactions.
 
-Concrete backend implementations will be able to support:
-* **In-Memory**: Volatile storage for simple sessions.
-* **Redis storage**: Distributed caching.
-* **Database persistence**: Long-term state tracking.
+Crucially, **memory persistence requires a `contextId`** explicitly defining which user/session the interactions belong to. `agent.run` and `agent.stream` automatically resolve memory using the passed `contextId`.
+
+Concrete backend implementations include:
+* **InMemoryMemory**: Built-in volatile map storage for simple node instances and rigorous testing.
+* *(Future Support)* **Redis Adapter**: Distributed cache mapping.
+* *(Future Support)* **PostgreSQL/MongoDB**: Long-term state tracking.
