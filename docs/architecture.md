@@ -72,7 +72,11 @@ agent.registerTool("search", async () => {})
 
 ### Model Adapter Layer
 
-Abstracts away specific LLM providers (e.g., OpenAI, Anthropic), allowing developers to swich models seamlessly without changing core application logic.
+Abstracts away specific LLM providers, allowing developers to switch models seamlessly without changing core application logic. 
+
+Supported implementations will include:
+* **MockModel**: Built-in mock model for running robust layout tests, tool verification, and iterations without incurring expensive API fees.
+* **OpenAIModel / AnthropicModel**: (Future) Real LLM providers.
 
 ---
 
