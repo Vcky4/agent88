@@ -51,12 +51,12 @@ console.log(finalResponse);
 
 ---
 
-## Roadmap Tracker (Phase 3 Complete)
+## Roadmap Tracker (Phase 4 Complete)
 
 - [x] Phase 1: Core Type Foundations & Abstract Layers
 - [x] Phase 2: Execution Core & Tool Executors
 - [x] Phase 3: Developer-First Public Agent API
-- [ ] Phase 4: OpenAI Adapter
+- [x] Phase 4: OpenAI Adapter
 - [ ] Phase 5: Memory System Plugins (Redis)
 - [ ] Phase 6: Observability, Express-Like Middlewares, and Hooks
 

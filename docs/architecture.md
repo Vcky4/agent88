@@ -92,7 +92,8 @@ Abstracts away specific LLM providers, allowing developers to switch models seam
 
 Supported implementations will include:
 * **MockModel**: Built-in mock model for running robust layout tests, tool verification, and iterations without incurring expensive API fees.
-* **OpenAIModel / AnthropicModel**: (Future) Real LLM providers.
+* **OpenAIModel**: A concrete adapter enabling full-featured recursive conversation loops and bridging structured tool execution natively via the OpenAI Chat Completions API.
+* **AnthropicModel**: (Future) Real LLM provider for Claude models.
 
 ---
 
