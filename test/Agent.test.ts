@@ -1,0 +1,106 @@
+import { describe, it, expect, vi } from 'vitest';
+import { Agent } from '../src/core/Agent.js';
+import { MockModel } from '../src/core/models/MockModel.js';
+import type { Tool } from '../src/core/tools/Tool.js';
+import type { BaseMemory } from '../src/core/memory/BaseMemory.js';
+import type { Message } from '../src/types/index.js';
+
+describe('Agent API', () => {
+    it('should correctly orchestrate a simple user request without tools or memory', async () => {
+        const mockModel = new MockModel([
+            { content: "Hello! I am Agent88." }
+        ]);
+
+        const agent = new Agent({ model: mockModel });
+
+        const result = await agent.run("Who are you?");
+
+        expect(result).toBe("Hello! I am Agent88.");
+        expect(mockModel.getCallCount()).toBe(1);
+    });
+
+    it('should respect the system prompt on first run', async () => {
+        // We will mock the internal engine run or check the mock model payload internally
+        // To be simpler, we'll spy on the mockModel.generate since Agent directly passes the memory downstream
+        const mockModel = new MockModel([
+            { content: "Understood." }
+        ]);
+
+        const generateSpy = vi.spyOn(mockModel, 'generate');
+
+        const agent = new Agent({
+            model: mockModel,
+            systemPrompt: "You are a helpful assistant."
+        });
+
+        await agent.run("Hi!");
+
+        // Assert the exact messages passed to the model downstream by the ExecutionEngine
+        expect(generateSpy).toHaveBeenCalledTimes(1);
+        const options = generateSpy.mock.calls[0]![0];
+        expect(options.messages[0]).toEqual({ role: "system", content: "You are a helpful assistant." });
+        expect(options.messages[1]).toEqual({ role: "user", content: "Hi!" });
+    });
+
+    it('should properly orchestrate tool execution loops via the ExecutionEngine', async () => {
+        const mockModel = new MockModel([
+            { toolCall: { name: 'search', input: { query: 'Agent88' } } },
+            { content: "Agent88 is a Node.js runtime!" }
+        ]);
+
+        const searchTool: Tool = {
+            name: "search",
+            description: "Search the web",
+            execute: async () => "Search result: Agent88 Framework"
+        };
+
+        const agent = new Agent({ model: mockModel });
+        agent.registerTool(searchTool);
+
+        const result = await agent.run("What is Agent88?");
+
+        expect(result).toBe("Agent88 is a Node.js runtime!");
+        expect(mockModel.getCallCount()).toBe(2);
+    });
+
+    it('should integrate correctly with Memory storage', async () => {
+        const mockModel = new MockModel([
+            { content: "Welcome back." }
+        ]);
+
+        // Define a simple mock memory class inline for this test
+        class InMemoryMock implements BaseMemory {
+            store: Message[] = [
+                { role: "user", content: "Previous message" },
+                { role: "assistant", content: "Previous response" }
+            ];
+
+            async save(msg: Message) {
+                this.store.push(msg);
+            }
+
+            async load(id: string) {
+                return [...this.store]; // Return copy
+            }
+        }
+
+        const memory = new InMemoryMock();
+        const generateSpy = vi.spyOn(mockModel, 'generate');
+
+        const agent = new Agent({ model: mockModel, memory });
+
+        // Use a context ID to trigger history load
+        const result = await agent.run("New message", "session_123");
+
+        expect(result).toBe("Welcome back.");
+
+        const options = generateSpy.mock.calls[0]![0];
+        expect(options.messages.length).toBe(3); // 2 history + 1 new
+        expect(options.messages[2]).toEqual({ role: "user", content: "New message" });
+
+        // Validate it appended both user input and assistant response to memory natively
+        expect(memory.store.length).toBe(4);
+        expect(memory.store[2]).toEqual({ role: "user", content: "New message" });
+        expect(memory.store[3]).toEqual({ role: "assistant", content: "Welcome back." });
+    });
+});
