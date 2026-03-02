@@ -56,9 +56,11 @@ sequenceDiagram
 
 ---
 
-### Tool Execution Layer
+### Tool Layer
 
-Allows developers to register external tools which are then executed by the engine's `ToolExecutor`.
+This layer tracks and safely executes external capabilities via tools. It consists of:
+* **ToolRegistry**: Manages registering tools, preventing duplicated tool names, and retrieving active tools to expose structural metadata to the execution engine.
+* **ToolExecutor**: Safely wraps and executes tool implementation logic, captures potential errors, and formats tool output seamlessly for the model.
 
 Example:
 
@@ -74,10 +76,11 @@ Abstracts away specific LLM providers (e.g., OpenAI, Anthropic), allowing develo
 
 ---
 
-### Memory Layer (Future)
+### Memory Layer
 
-Will support persisting conversational context across sessions.
+The memory layer is cleanly abstracted via the `BaseMemory` and `MemoryAdapter` interfaces, allowing conversational context to be saved and loaded across LLM interactions.
 
-Supported backends will include:
-* Redis storage
-* Database persistence
+Concrete backend implementations will be able to support:
+* **In-Memory**: Volatile storage for simple sessions.
+* **Redis storage**: Distributed caching.
+* **Database persistence**: Long-term state tracking.
