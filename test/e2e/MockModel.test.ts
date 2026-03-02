@@ -55,10 +55,13 @@ describe('End-to-End: MockModel & ExecutionEngine', () => {
         expect(mockModel.getCallCount()).toBe(3);
 
         // Assert the context message history properly recorded the tool responses
-        expect(context.messages.length).toBe(3); // User MSG -> Weather Results -> Time Results
-        expect(context.messages[1]!.role).toBe('tool');
-        expect(context.messages[1]!.content).toContain('Sunny and 75F');
+        // Assert the context message history properly recorded the intermediate tool prompts AND tool responses
+        expect(context.messages.length).toBe(5); // User MSG -> Assistant (Weather Request) -> Tool (Weather Result) -> Assistant (Time Request) -> Tool (Time Result)
+        expect(context.messages[1]!.role).toBe('assistant');
         expect(context.messages[2]!.role).toBe('tool');
-        expect(context.messages[2]!.content).toContain('3:00 PM');
+        expect(context.messages[2]!.content).toContain('Sunny and 75F');
+        expect(context.messages[3]!.role).toBe('assistant');
+        expect(context.messages[4]!.role).toBe('tool');
+        expect(context.messages[4]!.content).toContain('3:00 PM');
     });
 });

@@ -22,6 +22,13 @@ export class ExecutionEngine {
                 return response;
             }
 
+            // Important: Preserve the conversation state by appending the model's intermediate tool call
+            context.messages.push({
+                role: "assistant",
+                content: response.content || "",
+                toolCall: response.toolCall
+            });
+
             const tool = context.tools.find(
                 (t) => t.name === response.toolCall!.name
             );

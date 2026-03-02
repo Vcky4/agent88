@@ -3,6 +3,10 @@ import type { Tool } from "../core/tools/Tool.js";
 export interface Message {
     role: "user" | "assistant" | "tool" | "system"
     content: string
+    toolCall?: {
+        name: string
+        input: any
+    }
 }
 
 export interface MemoryAdapter {

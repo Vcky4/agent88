@@ -57,9 +57,11 @@ describe('ExecutionEngine', () => {
         expect(mockTool.execute).toHaveBeenCalledWith({ location: 'Miami' });
         expect(mockModel.generate).toHaveBeenCalledTimes(2);
         expect(response.content).toBe('The weather in Miami is Sunny and 75F');
-        expect(context.messages.length).toBe(2); // user message + tool result 
-        expect(context.messages[1]!.role).toBe('tool');
-        expect(context.messages[1]!.content).toContain('Sunny and 75F');
+        expect(context.messages.length).toBe(3); // user message + assistant tool request + tool result 
+        expect(context.messages[1]!.role).toBe('assistant');
+        expect(context.messages[1]!.toolCall?.name).toBe('getWeather');
+        expect(context.messages[2]!.role).toBe('tool');
+        expect(context.messages[2]!.content).toContain('Sunny and 75F');
     });
 
     it('should throw an error if max iterations are reached', async () => {
