@@ -12,6 +12,21 @@ Handles:
 * Memory integration
 * Delegating work to the Execution Engine
 
+**Design Protocol:** The Agent follows the Dependency Inversion principle. It does not run models directly, nor execute tools. Instead, it acts purely as an orchestrator tying dependencies together and resolving memory.
+
+Example Usage:
+```typescript
+const agent = new Agent({
+    model: new OpenAIModel({ apiKey: "..." }),
+    systemPrompt: "You are a helpful assistant.",
+    maxIterations: 5
+});
+
+agent.registerTool(searchTool);
+
+const finalResponse = await agent.run("What's the weather like?");
+```
+
 ---
 
 ### Execution Engine Layer
@@ -44,6 +59,7 @@ sequenceDiagram
         ModelAdapter-->>ExecutionEngine: ModelResponse
         
         alt requires tool execution (Tool Call)
+            ExecutionEngine->>ExecutionEngine: Append intermediate assistant message (Tool Call)
             ExecutionEngine->>ToolExecutor: execute tool with input
             ToolExecutor-->>ExecutionEngine: tool result
             ExecutionEngine->>ExecutionEngine: append tool result to messages
