@@ -32,6 +32,10 @@ export class MockModel implements BaseModel {
         };
     }
 
+    async *generateStream?(options: ModelGenerateOptions): AsyncGenerator<string> {
+        yield "Stream not mocked natively.";
+    }
+
     /**
      * Utility method to check how many times the model was called during a test.
      */

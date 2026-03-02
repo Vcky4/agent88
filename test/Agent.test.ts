@@ -102,4 +102,53 @@ describe('Agent API', () => {
         expect(memory.store[2]).toEqual({ role: "user", content: "New message" });
         expect(memory.store[3]).toEqual({ role: "assistant", content: "Welcome back." });
     });
+
+    it('should support conversational text streaming via agent.stream()', async () => {
+        const mockModel = new MockModel([
+            { content: "Mocked complete text" } // Standard run uses this
+        ]);
+
+        // Intercept streaming
+        mockModel.generateStream = async function* () {
+            yield "Hello, ";
+            yield "this ";
+            yield "is streamed.";
+        };
+
+        const agent = new Agent({ model: mockModel });
+
+        let result = "";
+        const stream = agent.stream("Start streaming");
+        for await (const chunk of stream) {
+            result += chunk;
+        }
+
+        expect(result).toBe("Hello, this is streamed.");
+    });
+
+    it('should execute middleware accurately using Express/Koa onion routing pattern', async () => {
+        const mockModel = new MockModel([{ content: "Middleware test run" }]);
+        const agent = new Agent({ model: mockModel });
+
+        const executionOrder: number[] = [];
+
+        // Outer middleware
+        agent.use(async (ctx, next) => {
+            executionOrder.push(1);
+            await next();
+            executionOrder.push(4);
+        });
+
+        // Inner middleware
+        agent.use(async (ctx, next) => {
+            executionOrder.push(2);
+            await next();
+            executionOrder.push(3);
+        });
+
+        const res = await agent.run("Trigger context");
+
+        expect(res).toBe("Middleware test run");
+        expect(executionOrder).toEqual([1, 2, 3, 4]); // Asserts the exact onion wrapper behavior.
+    });
 });

@@ -107,4 +107,38 @@ describe('ExecutionEngine', () => {
 
         await expect(engine.run(context)).rejects.toThrow('Tool unknownTool not found');
     });
+
+    it('should allow middleware to intercept, modify, and read execution contexts', async () => {
+        const mockModel: BaseModel = {
+            generate: vi.fn().mockResolvedValue({
+                content: 'Original Response',
+            }),
+        };
+
+        const toolExecutor = new ToolExecutor();
+        const engine = new ExecutionEngine(mockModel, toolExecutor);
+
+        engine.use(async (ctx, next) => {
+            // Modification BEFORE execution
+            ctx.messages.push({ role: "system", content: "Injected" });
+
+            await next();
+
+            // Modification AFTER execution
+            if (ctx.response && ctx.response.content) {
+                ctx.response.content = "Modified " + ctx.response.content;
+            }
+        });
+
+        const context: ExecutionContext = {
+            messages: [],
+            tools: [],
+        };
+
+        const response = await engine.run(context);
+
+        expect(context.messages.length).toBe(1);
+        expect(context.messages[0]!.content).toBe("Injected");
+        expect(response.content).toBe("Modified Original Response");
+    });
 });
