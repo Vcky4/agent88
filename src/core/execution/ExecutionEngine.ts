@@ -1,0 +1,48 @@
+import type { BaseModel } from "../models/BaseModel.js";
+import { ToolExecutor } from "./ToolExecutor.js";
+import type { ExecutionContext } from "./ExecutionContext.js";
+
+export class ExecutionEngine {
+    constructor(
+        private model: BaseModel,
+        private toolExecutor: ToolExecutor
+    ) { }
+
+    async run(context: ExecutionContext) {
+        let iterations = 0;
+        const max = context.maxIterations ?? 5;
+
+        while (iterations < max) {
+            const response = await this.model.generate({
+                messages: context.messages,
+                tools: context.tools
+            });
+
+            if (!response.toolCall) {
+                return response;
+            }
+
+            const tool = context.tools.find(
+                (t) => t.name === response.toolCall!.name
+            );
+
+            if (!tool) {
+                throw new Error(`Tool ${response.toolCall.name} not found`);
+            }
+
+            const result = await this.toolExecutor.execute(
+                tool,
+                response.toolCall.input
+            );
+
+            context.messages.push({
+                role: "tool",
+                content: JSON.stringify(result)
+            });
+
+            iterations++;
+        }
+
+        throw new Error("Max execution iterations reached");
+    }
+}

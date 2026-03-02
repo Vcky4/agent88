@@ -1,0 +1,30 @@
+{
+  "name": "agent88",
+  "version": "1.0.0",
+  "description": "Agent88 is an open source AI infrastructure framework designed to help developers build production-ready AI agents with ease.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vcky4/agent88.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Vcky4/agent88/issues"
+  },
+  "homepage": "https://github.com/Vcky4/agent88#readme",
+  "devDependencies": {
+    "@types/node": "^25.3.3",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}
