@@ -13,6 +13,8 @@ export class ExecutionEngine {
         const max = context.maxIterations ?? 5;
 
         while (iterations < max) {
+            console.log(`[Agent88] Iteration ${iterations + 1}`);
+
             const response = await this.model.generate({
                 messages: context.messages,
                 tools: context.tools
@@ -37,10 +39,14 @@ export class ExecutionEngine {
                 throw new Error(`Tool ${response.toolCall.name} not found`);
             }
 
+            console.log(`[Agent88] Tool called: ${tool.name}`);
+
             const result = await this.toolExecutor.execute(
                 tool,
                 response.toolCall.input
             );
+
+            console.log(`[Agent88] Tool result received`);
 
             context.messages.push({
                 role: "tool",
