@@ -23,8 +23,13 @@
   "homepage": "https://github.com/Vcky4/agent88#readme",
   "devDependencies": {
     "@types/node": "^25.3.3",
+    "dotenv": "^17.3.1",
     "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "openai": "^6.25.0"
   }
 }

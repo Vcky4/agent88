@@ -6,6 +6,7 @@ export type { Tool } from './core/tools/Tool.js';
 
 export type { BaseModel, ModelGenerateOptions, ModelResponse } from './core/models/BaseModel.js';
 export { MockModel } from './core/models/MockModel.js';
+export { OpenAIModel } from './core/models/OpenAIModel.js';
 
 export type { BaseMemory } from './core/memory/BaseMemory.js';
 
