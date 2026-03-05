@@ -59,6 +59,7 @@ console.log(finalResponse);
 - [x] Phase 3: Developer-First Public Agent API
 - [x] Phase 4: OpenAI Adapter
 - [x] Phase 5: v0.1 Maturity (Memory System, Streaming, Middlewares, JSONSchemas)
+- [x] Phase 6: Distributed Sessions & Native Streaming (Redis, ioredis, AsyncGenerator Streams)
 
 Check `docs/roadmap.md` and `docs/architecture.md` for our in-depth engineering blueprint.
 

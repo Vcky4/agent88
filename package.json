@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/Vcky4/agent88#readme",
   "devDependencies": {
+    "@types/ioredis": "^4.28.10",
     "@types/node": "^25.3.3",
     "dotenv": "^17.3.1",
     "tsup": "^8.5.1",
@@ -30,6 +31,7 @@
     "vitest": "^4.0.18"
   },
   "dependencies": {
+    "ioredis": "^5.10.0",
     "openai": "^6.25.0"
   }
 }

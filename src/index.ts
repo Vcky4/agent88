@@ -9,6 +9,7 @@ export type { Tool } from './core/tools/Tool.js';
 
 export type { MemoryAdapter } from './types/index.js';
 export { InMemoryMemory } from './core/memory/InMemoryMemory.js';
+export { RedisMemory } from './core/memory/RedisMemory.js';
 
 // Also exporting these for completeness to allow developers to format payloads manually if needed
 export type { Message, ModelInput } from './types/index.js';

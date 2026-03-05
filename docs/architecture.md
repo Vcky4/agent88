@@ -138,5 +138,5 @@ Crucially, **memory persistence requires a `contextId`** explicitly defining whi
 
 Concrete backend implementations include:
 * **InMemoryMemory**: Built-in volatile map storage for simple node instances and rigorous testing.
-* *(Future Support)* **Redis Adapter**: Distributed cache mapping.
+* **RedisMemory**: Distributed cache mapping via `ioredis` for multi-node deployments and stateless horizontal scaling.
 * *(Future Support)* **PostgreSQL/MongoDB**: Long-term state tracking.

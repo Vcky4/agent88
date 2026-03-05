@@ -20,6 +20,22 @@ export class OpenAIModel implements BaseModel {
         return this.parseResponse(response);
     }
 
+    async *generateStream(input: ModelGenerateOptions): AsyncGenerator<string> {
+        const stream = await this.client.chat.completions.create({
+            model: this.model,
+            messages: this.formatMessages(input.messages),
+            tools: this.formatTools(input.tools),
+            stream: true,
+        });
+
+        for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content;
+            if (content) {
+                yield content;
+            }
+        }
+    }
+
     private formatMessages(messages: any[]): any[] {
         let currentToolCallId = 'call_unknown'; // State to map tool results back to their caller
 

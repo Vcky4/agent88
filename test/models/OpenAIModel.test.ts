@@ -171,4 +171,35 @@ describe('OpenAIModel Adapter', () => {
             ]
         }));
     });
+
+    it('should natively yield text chunks via the generateStream interface', async () => {
+        // Setup a mock AsyncIterable for the OpenAI streaming response
+        mockCreate.mockResolvedValueOnce({
+            async *[Symbol.asyncIterator]() {
+                yield { choices: [{ delta: { content: "He" } }] };
+                yield { choices: [{ delta: { content: "llo" } }] };
+                yield { choices: [{ delta: { content: " Str" } }] };
+                yield { choices: [{ delta: { content: "eam" } }] };
+            }
+        });
+
+        const messages: Message[] = [{ role: 'user', content: 'Stream test' }];
+        const options: ModelGenerateOptions = { messages };
+
+        const stream = model.generateStream(options);
+
+        let fullOutput = "";
+        for await (const chunk of stream) {
+            fullOutput += chunk;
+        }
+
+        // Verify the chunks were captured and yielded cleanly by the adapter
+        expect(fullOutput).toBe("Hello Stream");
+
+        // Verify it sent the streaming flag downstream
+        expect(mockCreate).toHaveBeenCalledWith(expect.objectContaining({
+            stream: true,
+            messages: [{ role: 'user', content: 'Stream test' }]
+        }));
+    });
 });
