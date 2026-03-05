@@ -26,9 +26,7 @@ Agent88 abstracts the heavy lifting so you can focus on building intelligence:
 Agent88 completely seperates your specific execution layer and configurations so you can define the model and memory precisely.
 
 ```typescript
-import { Agent, ToolRegistry } from "agent88";
-import { OpenAIModel } from "agent88/adapters"; // Example future provider
-import { InMemoryMemory } from "agent88/memory"; 
+import { Agent, OpenAIModel, InMemoryMemory } from "agent88";
 
 // 1. Initialize an instance of your desired configurations
 const agent = new Agent({
@@ -61,21 +59,28 @@ console.log(finalResponse);
 - [x] Phase 5: v0.1 Maturity (Memory System, Streaming, Middlewares, JSONSchemas)
 - [x] Phase 6: Distributed Sessions & Native Streaming (Redis, ioredis, AsyncGenerator Streams)
 
-Check `docs/roadmap.md` and `docs/architecture.md` for our in-depth engineering blueprint.
+## Documentation
+
+Explore our guides to get up and running quickly:
+
+- 🚀 **[Getting Started](docs/getting-started.md)** — Installation and your first agent
+- 💡 **[Usage Examples](docs/examples.md)** — Runnable code for weather, chat, and planner agents
+- 📖 **[Architecture](docs/architecture.md)** — Internals, Execution Engine, and Onion Routing
+- 🗺️ **[Roadmap](docs/roadmap.md)** — Future plans and v0.1 completion status
 
 ---
 
 ## Contribution
 
-Pull requests are welcome!
+We welcome community contributions! Agent88 is designed to be modular. The easiest way to contribute is by building **Tools**, **Model Adapters**, or **Memory Adapters**.
 
-Please:
-1. Fork the repository
-2. Create a feature branch
-3. Submit a PR with a description of the architectural intent
+Please see our **[Contributing Guide](docs/contributing.md)** for details on:
+1. Setting up your local environment (`npm install`, `npm test`)
+2. Implementing the `Tool` and `BaseModel` interfaces
+3. Submitting PRs
 
 ---
 
 ## Author
 **Victor Okon**
-*AI Infrastructure Developer*
+*Development Practice Lead at Enbros | Founder, Maigie*

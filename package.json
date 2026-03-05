@@ -30,8 +30,16 @@
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
-  "dependencies": {
+  "peerDependencies": {
     "ioredis": "^5.10.0",
     "openai": "^6.25.0"
+  },
+  "peerDependenciesMeta": {
+    "ioredis": {
+      "optional": true
+    },
+    "openai": {
+      "optional": true
+    }
   }
 }
