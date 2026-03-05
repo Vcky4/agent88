@@ -18,6 +18,7 @@ Agent88 abstracts the heavy lifting so you can focus on building intelligence:
 - ✅ **Memory Layer Abstraction**: Context-aware interactions via `MemoryAdapter` interfaces (In-Memory included, Redis/DB extensible).
 - ✅ **Streaming support**: Real-time conversational text yielding via `agent.stream()`.
 - ✅ **Middleware System**: Express/Koa style Onion routing using `agent.use()` to intercept, modify, or observe executions.
+- ✅ **Observability**: Built-in `Trace` system for recording and extracting robust timings and model interaction metrics.
 
 ---
 
@@ -64,7 +65,7 @@ console.log(finalResponse);
 Explore our guides to get up and running quickly:
 
 - 🚀 **[Getting Started](docs/getting-started.md)** — Installation and your first agent
-- 💡 **[Usage Examples](docs/examples.md)** — Runnable code for weather, chat, and planner agents
+- 💡 **[Usage Examples](docs/examples.md)** — Runnable code for weather, chat, and planner agents (Check out the `examples/` folder in the repo!)
 - 📖 **[Architecture](docs/architecture.md)** — Internals, Execution Engine, and Onion Routing
 - 🗺️ **[Roadmap](docs/roadmap.md)** — Future plans and v0.1 completion status
 

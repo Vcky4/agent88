@@ -178,9 +178,9 @@ agent.use(rateLimitMiddleware)
 
 Allow:
 
-* Before execution hook
-* After tool execution hook
-* Error hook
+* ✔ Before execution hook
+* ✔ After tool execution hook
+* ✔ Error hook
 
 
 ---

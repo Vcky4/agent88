@@ -55,6 +55,43 @@ agent.use(async (ctx, next) => {
 
 ---
 
+### Observability Layer
+
+Agent88 comes with built-in instrumentation via the `Trace` object (available on the `ExecutionContext`). This allows developers to easily extract timings and events from any Agent run without configuring external telemetry systems immediately.
+
+The `Trace` records the exact millisecond duration of:
+* Full Model Generation turns
+* Individual Tool Executions
+
+Extract these inside your middleware:
+
+```ts
+agent.use(async (ctx, next) => {
+    await next();
+    
+    // Dump structured timeline data after run completion
+    console.table(ctx.trace.getEvents()); 
+});
+```
+
+---
+
+Agent88 uses an Express/Koa style **Onion Routing pattern** to intercept the `ExecutionEngine`.
+
+This allows developers to securely wrap the core reasoning loop to inject system prompts, enforce guardrails, or log events *before* and *after* the model executes.
+
+```ts
+agent.use(async (ctx, next) => {
+    console.log("Before execution (Context state):", ctx.messages);
+    
+    await next(); // Await the innermost core loop
+
+    console.log("After execution (Final Result):", ctx.response);
+});
+```
+
+---
+
 ### Streaming Layer
 
 Agent88 supports native text streaming via the `agent.stream()` async generator, allowing token-by-token delivery to consumers.

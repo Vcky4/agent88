@@ -2,6 +2,8 @@
 
 Complete, runnable examples showing how to build agents with Agent88.
 
+> **💡 Note:** You can run all of these examples directly from the repository! Just clone Agent88 and look inside the `examples/` directory. Run them like this: `npx tsx examples/weather-agent.ts`
+
 > **Prerequisites:** All examples require an OpenAI API key set as `OPENAI_API_KEY` in your environment or `.env` file.
 
 ---
