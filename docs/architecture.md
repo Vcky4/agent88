@@ -19,7 +19,7 @@ Handles:
 Example Usage:
 ```typescript
 const agent = new Agent({
-    model: new OpenAIModel({ apiKey: "..." }),
+    model: new OpenAIModel("sk-...", "gpt-4o-mini"),
     systemPrompt: "You are a helpful assistant.",
     maxIterations: 5
 });
@@ -55,6 +55,23 @@ agent.use(async (ctx, next) => {
 
 ---
 
+### Streaming Layer
+
+Agent88 supports native text streaming via the `agent.stream()` async generator, allowing token-by-token delivery to consumers.
+
+Streaming is enabled by the optional `generateStream()` method on the `BaseModel` interface. Model adapters that implement this method (such as `OpenAIModel`) can be used with `agent.stream()`. If the active model does not support streaming, an error is thrown immediately.
+
+> **v0.1 Note:** Streaming currently bypasses the `ExecutionEngine` tool execution loop and delegates directly to the model. This means streamed responses cannot trigger tool calls. Full agentic streaming is planned for a future version.
+
+```ts
+const stream = agent.stream("Tell me a story", "session_123");
+for await (const chunk of stream) {
+    process.stdout.write(chunk);
+}
+```
+
+---
+
 ### Execution Engine Layer
 
 The central brain of Agent88 that manages the interaction between the LLM and the tools.
@@ -65,6 +82,7 @@ Responsibilities:
 * Executing tools safely via the `ToolExecutor`
 * Re-feeding tool execution results back to the model
 * Managing reasoning loops and iteration limits
+* Composing the middleware pipeline (onion routing) around the core loop
 * Returning final output
 
 #### Execution Engine Flow
@@ -96,6 +114,17 @@ sequenceDiagram
     Agent-->>User: return final output
 ```
 
+#### ExecutionContext
+
+The `ExecutionContext` is the shared state object threaded through the middleware pipeline and the core loop:
+
+| Field           | Type             | Description                                                       |
+| --------------- | ---------------- | ----------------------------------------------------------------- |
+| `messages`      | `Message[]`      | The conversation history (mutated during execution)               |
+| `tools`         | `Tool[]`         | Tools registered with the agent                                   |
+| `maxIterations` | `number?`        | Iteration limit for the reasoning loop                            |
+| `response`      | `ModelResponse?` | Populated by the core loop; readable by middleware after `next()` |
+
 ---
 
 ### Tool Layer
@@ -121,12 +150,14 @@ agent.registerTool({
 
 ### Model Adapter Layer
 
-Abstracts away specific LLM providers, allowing developers to switch models seamlessly without changing core application logic. 
+Abstracts away specific LLM providers, allowing developers to switch models seamlessly without changing core application logic. All adapters implement the `BaseModel` interface, which requires a `generate()` method and an optional `generateStream()` method for streaming support.
 
-Supported implementations will include:
-* **MockModel**: Built-in mock model for running robust layout tests, tool verification, and iterations without incurring expensive API fees.
-* **OpenAIModel**: A concrete adapter enabling full-featured recursive conversation loops and bridging structured tool execution natively via the OpenAI Chat Completions API.
-* **AnthropicModel**: (Future) Real LLM provider for Claude models.
+Current implementations:
+* **MockModel**: Built-in mock model for running robust unit tests, tool verification, and iteration logic without incurring API fees.
+* **OpenAIModel**: Concrete adapter supporting full recursive conversation loops, structured tool execution via the OpenAI Chat Completions API, and native token streaming via `generateStream()`.
+
+Future:
+* **AnthropicModel**: Real LLM provider for Claude models.
 
 ---
 
@@ -136,7 +167,9 @@ The memory layer is cleanly abstracted via the `MemoryAdapter` interface, allowi
 
 Crucially, **memory persistence requires a `contextId`** explicitly defining which user/session the interactions belong to. `agent.run` and `agent.stream` automatically resolve memory using the passed `contextId`.
 
-Concrete backend implementations include:
+Current implementations:
 * **InMemoryMemory**: Built-in volatile map storage for simple node instances and rigorous testing.
-* **RedisMemory**: Distributed cache mapping via `ioredis` for multi-node deployments and stateless horizontal scaling.
-* *(Future Support)* **PostgreSQL/MongoDB**: Long-term state tracking.
+* **RedisMemory**: Distributed cache via `ioredis` for multi-node deployments and stateless horizontal scaling. Accepts an existing `Redis` instance, a connection string, or `RedisOptions`.
+
+Future:
+* **PostgreSQL/MongoDB**: Long-term state tracking.
