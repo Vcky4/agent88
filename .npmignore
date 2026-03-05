@@ -1,0 +1,6 @@
+test/
+examples/
+tests/
+.env
+.github/
+.vscode/
