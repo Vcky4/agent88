@@ -1,4 +1,4 @@
-import { Agent, OpenAIModel } from "../src/index.js";
+import { Agent, OpenAIModel } from "../../src/index.js";
 
 if (!process.env.OPENAI_API_KEY) {
     console.warn("Please set OPENAI_API_KEY in your environment to run this example.");

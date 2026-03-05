@@ -160,4 +160,4 @@ async function streamExample() {
 
 - 💡 **[See more Examples](./examples.md)** — Check out full weather agents and planner loops.
 - 🏗️ **[Read the Architecture](./architecture.md)** — Understand the ExecutionEngine, Onion Routing, and interfaces.
-- 🤝 **[Contributing](./contributing.md)** — Learn how to build custom model adapters or memory layers for the community.
+- 🤝 **[Contributing](../CONTRIBUTING.md)** — Learn how to build custom model adapters or memory layers for the community.

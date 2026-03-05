@@ -1,4 +1,4 @@
-import { Agent, OpenAIModel, InMemoryMemory } from "../src/index.js";
+import { Agent, OpenAIModel, InMemoryMemory } from "../../src/index.js";
 import * as readline from "readline";
 
 if (!process.env.OPENAI_API_KEY) {

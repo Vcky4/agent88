@@ -1,0 +1,19 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.0] - 2026-03-05
+
+### Added
+- Core architecture (`Agent`, `BaseModel`, `MemoryAdapter`, `Tool`).
+- Robust Execution Engine loop for recursive agent logic and tool utilization.
+- Strict JSON Schema parameter support for strongly typed Tool definitions.
+- Out-of-the-box `OpenAIModel` adapter mapping perfectly to ChatGPT APIs.
+- Volatile `InMemoryMemory` and distributed `RedisMemory` support.
+- Native Text Generators (`agent.stream()`) for token-by-token LLM output.
+- Onion Routing Middleware system (`agent.use()`).
+- Rich Observability timings via the `Trace` object available on Context.
+- Public `examples/` directory featuring Chat, Weather, and Planner agents.

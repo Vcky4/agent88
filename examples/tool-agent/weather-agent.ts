@@ -1,4 +1,4 @@
-import { Agent, OpenAIModel } from "../src/index.js";
+import { Agent, OpenAIModel } from "../../src/index.js";
 
 // Ensure API key is available
 if (!process.env.OPENAI_API_KEY) {
