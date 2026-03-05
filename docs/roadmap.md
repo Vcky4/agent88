@@ -234,9 +234,9 @@ We stay disciplined.
 
 ---
 
-# 🎯 What “v0.1” Should Include
+# 🎯 What “v0.1” Included
 
-Minimal but impressive:
+Minimal but impressive foundations now complete:
 
 ✔ Execution loop
 ✔ Tool execution
@@ -244,3 +244,30 @@ Minimal but impressive:
 ✔ Mock model
 ✔ Clean Agent API
 ✔ Good documentation
+✔ Observability via Trace
+✔ Runnable Examples Directory
+
+---
+
+# 🔮 PHASE 8 — v0.2 Track (Next Horizon)
+
+With the single-agent core stabilized, v0.2 will focus on expanding orchestration capabilities and supporting more LLM ecosystems.
+
+## 16️⃣ Multi-Agent Orchestration (Graph Execution)
+
+Add the ability to compose and chain multiple specialized agents together to solve complex problems natively.
+
+```ts
+// Example API vision
+const finalResult = await agent88.chain(
+   [researchAgent, analysisAgent, summaryAgent],
+   "Analyze latest AI frameworks"
+);
+```
+
+## 17️⃣ Expanded Model Ecosystem
+
+Build out native adapters for the most heavily requested LLM providers:
+
+* `AnthropicModel` (Claude 3.5 family)
+* `LocalModel` (Ollama / Llama.cpp for local, private agent execution)
