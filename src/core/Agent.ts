@@ -5,6 +5,7 @@ import { ToolExecutor } from "./execution/ToolExecutor.js";
 import type { Tool } from "./tools/Tool.js";
 import type { ExecutionContext } from "./execution/ExecutionContext.js";
 import type { Middleware } from "./execution/Middleware.js";
+import { Trace } from "./execution/Trace.js";
 import type { Message, MemoryAdapter } from "../types/index.js";
 
 export interface AgentConfig {
@@ -78,7 +79,8 @@ export class Agent {
         const context: ExecutionContext = {
             messages: messages,
             tools: this.registry.getAllTools(),
-            maxIterations: this.maxIterations
+            maxIterations: this.maxIterations,
+            trace: new Trace()
         };
 
         const response = await this.engine.run(context);

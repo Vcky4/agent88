@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { MockModel } from '../../src/core/models/MockModel.js';
 import { ExecutionEngine } from '../../src/core/execution/ExecutionEngine.js';
 import { ToolExecutor } from '../../src/core/execution/ToolExecutor.js';
+import { Trace } from '../../src/core/execution/Trace.js';
 import type { Tool } from '../../src/core/tools/Tool.js';
 import type { ExecutionContext } from '../../src/core/execution/ExecutionContext.js';
 
@@ -40,7 +41,8 @@ describe('End-to-End: MockModel & ExecutionEngine', () => {
         const context: ExecutionContext = {
             messages: [{ role: 'user', content: 'What is the weather in Miami and what time is it?' }],
             tools: [getWeatherTool, getCurrentTimeTool],
-            maxIterations: 5
+            maxIterations: 5,
+            trace: new Trace()
         };
 
         // 4. Run the engine

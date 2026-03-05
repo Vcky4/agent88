@@ -43,10 +43,12 @@ export class ExecutionEngine {
         while (iterations < max) {
             console.log(`[Agent88] Iteration ${iterations + 1}`);
 
+            context.trace.start("llm_generate", { iteration: iterations + 1 });
             const response = await this.model.generate({
                 messages: context.messages,
                 tools: context.tools
             });
+            context.trace.end("llm_generate");
 
             if (!response.toolCall) {
                 return response;
@@ -69,10 +71,12 @@ export class ExecutionEngine {
 
             console.log(`[Agent88] Tool called: ${tool.name}`);
 
+            context.trace.start("tool_execution", { tool: tool.name });
             const result = await this.toolExecutor.execute(
                 tool,
                 response.toolCall.input
             );
+            context.trace.end("tool_execution");
 
             console.log(`[Agent88] Tool result received`);
 

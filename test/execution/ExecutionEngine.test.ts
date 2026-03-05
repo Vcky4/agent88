@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { ExecutionEngine } from '../../src/core/execution/ExecutionEngine.js';
 import { ToolExecutor } from '../../src/core/execution/ToolExecutor.js';
+import { Trace } from '../../src/core/execution/Trace.js';
 import type { ExecutionContext } from '../../src/core/execution/ExecutionContext.js';
 import type { BaseModel, ModelResponse } from '../../src/core/models/BaseModel.js';
 import type { Tool } from '../../src/core/tools/Tool.js';
@@ -19,6 +20,7 @@ describe('ExecutionEngine', () => {
         const context: ExecutionContext = {
             messages: [{ role: 'user', content: 'Hello' }],
             tools: [],
+            trace: new Trace()
         };
 
         const response = await engine.run(context);
@@ -50,6 +52,7 @@ describe('ExecutionEngine', () => {
         const context: ExecutionContext = {
             messages: [{ role: 'user', content: 'What is the weather in Miami?' }],
             tools: [mockTool],
+            trace: new Trace()
         };
 
         const response = await engine.run(context);
@@ -84,6 +87,7 @@ describe('ExecutionEngine', () => {
             messages: [{ role: 'user', content: 'Start loop' }],
             tools: [mockTool],
             maxIterations: 3,
+            trace: new Trace()
         };
 
         await expect(engine.run(context)).rejects.toThrow('Max execution iterations reached');
@@ -103,6 +107,7 @@ describe('ExecutionEngine', () => {
         const context: ExecutionContext = {
             messages: [{ role: 'user', content: 'Call unknown tool' }],
             tools: [],
+            trace: new Trace()
         };
 
         await expect(engine.run(context)).rejects.toThrow('Tool unknownTool not found');
@@ -133,6 +138,7 @@ describe('ExecutionEngine', () => {
         const context: ExecutionContext = {
             messages: [],
             tools: [],
+            trace: new Trace()
         };
 
         const response = await engine.run(context);
@@ -140,5 +146,62 @@ describe('ExecutionEngine', () => {
         expect(context.messages.length).toBe(1);
         expect(context.messages[0]!.content).toBe("Injected");
         expect(response.content).toBe("Modified Original Response");
+    });
+
+    it('should correctly record trace events for llm generation and tool execution', async () => {
+        const mockTool: Tool = {
+            name: 'fastTool',
+            description: 'Does something fast',
+            execute: vi.fn().mockImplementation(async () => {
+                await new Promise(resolve => setTimeout(resolve, 10)); // tiny delay to ensure duration > 0
+                return 'Success';
+            }),
+        };
+
+        const mockModel: BaseModel = {
+            generate: vi.fn()
+                .mockImplementationOnce(async () => {
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                    return { toolCall: { name: 'fastTool', input: {} } };
+                })
+                .mockImplementationOnce(async () => {
+                    await new Promise(resolve => setTimeout(resolve, 10));
+                    return { content: 'All done.' };
+                })
+        };
+
+        const toolExecutor = new ToolExecutor();
+        const engine = new ExecutionEngine(mockModel, toolExecutor);
+
+        const context: ExecutionContext = {
+            messages: [{ role: 'user', content: 'Run trace test' }],
+            tools: [mockTool],
+            trace: new Trace()
+        };
+
+        await engine.run(context);
+
+        const events = context.trace.getEvents();
+
+        // We expect 3 events: 
+        // 1. llm generation (iteration 1, returns toolcall)
+        // 2. tool execution (fastTool)
+        // 3. llm generation (iteration 2, returns final answer)
+        expect(events.length).toBe(3);
+
+        const firstLlm = events[0]!;
+        expect(firstLlm.name).toBe("llm_generate");
+        expect(firstLlm.metadata?.iteration).toBe(1);
+        expect(firstLlm.durationMs).toBeGreaterThan(0);
+
+        const toolTrace = events[1]!;
+        expect(toolTrace.name).toBe("tool_execution");
+        expect(toolTrace.metadata?.tool).toBe("fastTool");
+        expect(toolTrace.durationMs).toBeGreaterThan(0);
+
+        const secondLlm = events[2]!;
+        expect(secondLlm.name).toBe("llm_generate");
+        expect(secondLlm.metadata?.iteration).toBe(2);
+        expect(secondLlm.durationMs).toBeGreaterThan(0);
     });
 });
