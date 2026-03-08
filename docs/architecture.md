@@ -37,6 +37,62 @@ for await (const chunk of stream) {
 
 ---
 
+### Agent Graph Orchestration Layer
+
+Agent88 supports multi-agent workflows via the `AgentGraph` class. Compose multiple specialized agents into a directed acyclic graph (DAG) where the output of one agent feeds into the next.
+
+```typescript
+import { Agent, AgentGraph, OpenAIModel } from "agent88";
+
+const graph = new AgentGraph();
+
+graph.add("research", researchAgent);
+graph.add("analysis", analysisAgent);
+graph.add("summary", summaryAgent);
+
+graph.connect("research", "analysis");
+graph.connect("analysis", "summary");
+
+const result = await graph.run("Explain quantum computing");
+```
+
+**Architecture:**
+
+| Component       | Responsibility                                               |
+| --------------- | ------------------------------------------------------------ |
+| `GraphNode`     | Binds a string `id` to an `Agent` instance                   |
+| `GraphEdge`     | Directed edge defining flow (`from` → `to`)                  |
+| `AgentGraph`    | Developer API: `add()`, `connect()`, `run()` with validation |
+| `GraphExecutor` | Topological sort (Kahn's algorithm) + cycle detection        |
+
+**Memory Model:** Each agent in the graph has its own isolated memory. Data flows between agents purely through output piping — one agent's return value becomes the next agent's prompt. Agents never share memory state directly.
+
+#### Agent Graph Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant AgentGraph
+    participant GraphExecutor
+    participant AgentA as Agent A
+    participant AgentB as Agent B
+    participant AgentC as Agent C
+    
+    User->>AgentGraph: run(input)
+    AgentGraph->>GraphExecutor: execute(nodes, edges, input)
+    GraphExecutor->>GraphExecutor: topological sort
+    GraphExecutor->>AgentA: run(input)
+    AgentA-->>GraphExecutor: output A
+    GraphExecutor->>AgentB: run(output A)
+    AgentB-->>GraphExecutor: output B
+    GraphExecutor->>AgentC: run(output B)
+    AgentC-->>GraphExecutor: output C
+    GraphExecutor-->>AgentGraph: output C
+    AgentGraph-->>User: final result
+```
+
+---
+
 ### Middleware Pipeline
 
 Agent88 uses an Express/Koa style **Onion Routing pattern** to intercept the `ExecutionEngine`.
@@ -71,22 +127,6 @@ agent.use(async (ctx, next) => {
     
     // Dump structured timeline data after run completion
     console.table(ctx.trace.getEvents()); 
-});
-```
-
----
-
-Agent88 uses an Express/Koa style **Onion Routing pattern** to intercept the `ExecutionEngine`.
-
-This allows developers to securely wrap the core reasoning loop to inject system prompts, enforce guardrails, or log events *before* and *after* the model executes.
-
-```ts
-agent.use(async (ctx, next) => {
-    console.log("Before execution (Context state):", ctx.messages);
-    
-    await next(); // Await the innermost core loop
-
-    console.log("After execution (Final Result):", ctx.response);
 });
 ```
 
@@ -194,7 +234,9 @@ Current implementations:
 * **OpenAIModel**: Concrete adapter supporting full recursive conversation loops, structured tool execution via the OpenAI Chat Completions API, and native token streaming via `generateStream()`.
 
 Future:
-* **AnthropicModel**: Real LLM provider for Claude models.
+* **AnthropicModel**: Claude 3.5 family (cloud)
+* **GeminiModel**: Google Gemini (cloud)
+* **OllamaModel**: Ollama / Llama.cpp (local, private execution)
 
 ---
 

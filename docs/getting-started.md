@@ -156,8 +156,42 @@ async function streamExample() {
 
 ---
 
+## 7. Multi-Agent Graphs
+
+For complex workflows, compose multiple agents into a pipeline using `AgentGraph`. Each agent's output is piped as the input to the next.
+
+```typescript
+import { Agent, AgentGraph, OpenAIModel } from "agent88";
+
+const apiKey = process.env.OPENAI_API_KEY!;
+
+// Create specialized agents
+const researchAgent = new Agent({
+    model: new OpenAIModel(apiKey),
+    systemPrompt: "You are a researcher. Provide 3 key facts on the given topic."
+});
+
+const summaryAgent = new Agent({
+    model: new OpenAIModel(apiKey),
+    systemPrompt: "You are a summarizer. Condense the input into one sentence."
+});
+
+// Build the graph
+const graph = new AgentGraph();
+graph.add("research", researchAgent);
+graph.add("summary", summaryAgent);
+graph.connect("research", "summary");
+
+const result = await graph.run("Quantum computing");
+console.log(result); // One-sentence summary of research findings
+```
+
+> **Note:** Each agent in the graph has isolated memory. Data flows between agents via output piping, not shared state.
+
+---
+
 ## Where to Next?
 
-- 💡 **[See more Examples](./examples.md)** — Check out full weather agents and planner loops.
-- 🏗️ **[Read the Architecture](./architecture.md)** — Understand the ExecutionEngine, Onion Routing, and interfaces.
-- 🤝 **[Contributing](../CONTRIBUTING.md)** — Learn how to build custom model adapters or memory layers for the community.
+- 💡 **[See more Examples](./examples.md)** — Weather agents, planner loops, and multi-agent graphs.
+- 🏗️ **[Read the Architecture](./architecture.md)** — ExecutionEngine, Agent Graph, Onion Routing, and interfaces.
+- 🤝 **[Contributing](../CONTRIBUTING.md)** — Build custom model adapters or memory layers for the community.

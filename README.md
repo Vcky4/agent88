@@ -19,6 +19,7 @@ We separate the execution layer, memory layers, and LLM models from your agent d
 - ✅ **Clean Agent API**: Simple, developer-first orchestration of complex ML layers.
 - ✅ **Execution Engine Loop**: Automatically handles recursive LLM reasoning, detects intent, and controls iteration counts.
 - ✅ **Tool Execution (Plugins)**: A strict Tool Registry enabling seamless multi-action capability execution natively via robust JSONSchemas.
+- ✅ **Agent Graph Orchestration**: Compose multiple agents into directed acyclic graphs via `AgentGraph` — chain specialized agents with `add()`, `connect()`, and `run()`.
 - ✅ **Model Adapter Abstraction**: Decoupled from direct providers. Swap OpenAI for local models via the `BaseModel` interface.
 - ✅ **Memory Layer Abstraction**: Context-aware interactions via `MemoryAdapter` interfaces (In-Memory and Redis extensible).
 - ✅ **Streaming Support**: Real-time conversational text yielding via `agent.stream()`.
@@ -61,6 +62,7 @@ We firmly believe frameworks grow through examples. You can find ready-to-run ag
 - 🛠️ `examples/tool-agent/weather-agent.ts` — An agent that detects when to trigger a weather-lookup tool to fulfill requests.
 - 🧠 `examples/memory-agent/chat-agent.ts` — A streaming, persistent conversational agent utilizing the In-Memory cache adapter.
 - 📋 `examples/tool-agent/planner-agent.ts` — A multi-iteration task tracking agent doing chain-of-thought tool execution.
+- 🔀 `examples/graph-agent/graph-agent.ts` — A multi-agent pipeline chaining research → analysis → summary via `AgentGraph`.
 
 **Run them instantly:**
 ```bash
@@ -84,8 +86,13 @@ Explore our detailed guides:
 
 Agent88 is in active development.
 
-- **v0.1**: Built the foundation (Execution loop, Tool executions, Model/Memory abstractions, Clean API, Middleware).
-- **v0.2 Track (Active)**: **Multi-Agent Orchestration (`agent.chain`)** and expanded model ecosystem adapters (`AnthropicModel`, `LocalModel`).
+| Version  | Focus                                                             | Status    |
+| -------- | ----------------------------------------------------------------- | --------- |
+| **v0.1** | Single Agent Core (Execution, Tools, Memory, Middleware, Tracing) | ✅ Shipped |
+| **v0.2** | Agent Graph Orchestration (`AgentGraph`)                          | ✅ Shipped |
+| v0.3     | Model Adapter Expansion (Anthropic, Gemini, Ollama)               | 🔜 Next    |
+| v0.4     | Observability & Debugging                                         | Planned   |
+| v0.5     | Plugin Ecosystem                                                  | Planned   |
 
 View the full **[Engineering Roadmap](docs/roadmap.md)**.
 

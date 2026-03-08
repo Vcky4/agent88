@@ -194,8 +194,66 @@ agent.use(async (ctx, next) => {
 
 ---
 
+## 🔀 Agent Graph Pipeline
+
+Chain multiple specialized agents into a **research → analysis → summary** pipeline using `AgentGraph`. Each agent's output automatically feeds into the next.
+
+```typescript
+import { Agent, AgentGraph, OpenAIModel } from "agent88";
+
+const apiKey = process.env.OPENAI_API_KEY!;
+
+// Stage 1 — Research Agent (with a tool)
+const researchAgent = new Agent({
+    model: new OpenAIModel(apiKey),
+    systemPrompt: "You are a researcher. Use the factLookup tool, then summarize in 3 bullet points."
+});
+
+researchAgent.registerTool({
+    name: "factLookup",
+    description: "Look up key facts about a topic.",
+    parameters: {
+        type: "object",
+        properties: { topic: { type: "string" } },
+        required: ["topic"]
+    },
+    execute: async ({ topic }) => `Key facts about ${topic}: quantum supremacy, post-quantum crypto, qubit scaling.`
+});
+
+// Stage 2 — Analysis Agent
+const analysisAgent = new Agent({
+    model: new OpenAIModel(apiKey),
+    systemPrompt: "You are an analyst. Identify the most impactful finding and explain why."
+});
+
+// Stage 3 — Summary Agent
+const summaryAgent = new Agent({
+    model: new OpenAIModel(apiKey),
+    systemPrompt: "You are a summarizer. Produce a one-sentence executive brief."
+});
+
+// Wire the graph
+const graph = new AgentGraph();
+graph.add("research", researchAgent);
+graph.add("analysis", analysisAgent);
+graph.add("summary", summaryAgent);
+graph.connect("research", "analysis");
+graph.connect("analysis", "summary");
+
+const result = await graph.run("Impact of quantum computing on cybersecurity");
+console.log(result);
+```
+
+**What this demonstrates:**
+- **Multi-agent orchestration**: Three agents execute in topological order via `GraphExecutor`
+- **Tool usage within graphs**: The research agent calls a tool before passing output downstream
+- **Isolated memory**: Each agent has its own memory scope — data flows through output piping, not shared state
+- **Cycle detection**: `AgentGraph` validates the DAG and throws if a cycle is detected
+
+---
+
 ## Next Steps
 
 - [Getting Started](./getting-started.md) — Install and build your first agent
-- [Architecture](./architecture.md) — Deep dive into Agent88's internals
+- [Architecture](./architecture.md) — Deep dive into Agent88's internals, including the Agent Graph layer
 - [Contributing](../CONTRIBUTING.md) — Build custom tools, adapters, and modules
