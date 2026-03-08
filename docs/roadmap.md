@@ -249,25 +249,156 @@ Minimal but impressive foundations now complete:
 
 ---
 
-# 🔮 PHASE 8 — v0.2 Track (Next Horizon)
+# 🔮 PHASE 8 — Agent Graph Execution (v0.2)
 
-With the single-agent core stabilized, v0.2 will focus on expanding orchestration capabilities and supporting more LLM ecosystems.
+With the single-agent core stabilized, v0.2 introduces multi-agent orchestration via directed graph execution.
 
-## 16️⃣ Multi-Agent Orchestration (Graph Execution)
+## 16️⃣ Agent Graph Architecture
 
-Add the ability to compose and chain multiple specialized agents together to solve complex problems natively.
+New module: `src/core/graph/`
+
+| File               | Purpose                                             |
+| ------------------ | --------------------------------------------------- |
+| `GraphNode.ts`     | Interface binding an `id` to an `Agent`             |
+| `GraphEdge.ts`     | Directed edge (`from` → `to`)                       |
+| `AgentGraph.ts`    | Developer-facing API: `add()`, `connect()`, `run()` |
+| `GraphExecutor.ts` | Linear executor with topological sort               |
 
 ```ts
-// Example API vision
-const finalResult = await agent88.chain(
-   [researchAgent, analysisAgent, summaryAgent],
-   "Analyze latest AI frameworks"
-);
+const graph = new AgentGraph()
+
+graph.add("research", researchAgent)
+graph.add("analysis", analysisAgent)
+graph.add("summary", summaryAgent)
+
+graph.connect("research", "analysis")
+graph.connect("analysis", "summary")
+
+const result = await graph.run("Explain the impact of quantum computing")
 ```
 
-## 17️⃣ Expanded Model Ecosystem
+v0.2 ships linear execution. Future iterations will add:
 
-Build out native adapters for the most heavily requested LLM providers:
+* Branching & fan-out
+* Parallel agent execution
+* Conditional routing
+* Output merging
 
-* `AnthropicModel` (Claude 3.5 family)
-* `LocalModel` (Ollama / Llama.cpp for local, private agent execution)
+---
+
+# 🔌 PHASE 8.5 — Model Adapter Expansion (v0.3)
+
+Expand the model ecosystem beyond OpenAI:
+
+## 17️⃣ Additional Model Adapters
+
+* `AnthropicModel` — Claude 3.5 family (cloud)
+* `GeminiModel` — Google Gemini (cloud)
+* `OllamaModel` — Ollama / Llama.cpp (local, private execution)
+
+This gives Agent88:
+
+* ✅ Cloud models
+* ✅ Local models
+* ✅ Open ecosystem
+
+---
+
+# 🧩 PHASE 9 — Observability & Debugging (v0.4)
+
+## 18️⃣ AgentTraceViewer
+
+* Execution timeline visualization
+* Tool call inspection
+* Latency breakdown per agent node
+
+Think: LangSmith-like debugging, but lightweight.
+
+---
+
+# 📦 PHASE 10 — Plugin Ecosystem (v0.5)
+
+## 19️⃣ Installable Tool Plugins
+
+```bash
+npm install agent88-tool-github
+npm install agent88-tool-search
+npm install agent88-tool-database
+```
+
+Standardized plugin interface for community-contributed tools.
+
+---
+
+# 🗺 Clean Step-by-Step Build Order
+
+Here is the order we should actually build in:
+
+1. Types
+2. BaseModel interface
+3. Tool interface
+4. ToolRegistry
+5. ToolExecutor
+6. MockModel
+7. ExecutionEngine
+8. Agent class
+9. InMemoryMemory
+10. OpenAI adapter
+11. Streaming
+12. Middleware (v1.1)
+13. Agent Graph (v0.2)
+14. Model Adapters — Anthropic, Gemini, Ollama (v0.3)
+15. Tracing & Debugging (v0.4)
+16. Plugin Ecosystem (v0.5)
+
+If we follow this, we will not get lost.
+
+---
+
+# ⚠️ Guardrails (So We Don't Drift)
+
+We will NOT:
+
+* Add UI
+* Add frontend
+* Add unnecessary abstractions
+* Overbuild memory early
+* Support every model at once
+
+We stay disciplined.
+
+---
+
+# 🎯 What "v0.1" Included
+
+Minimal but impressive foundations now complete:
+
+✔ Execution loop
+✔ Tool execution
+✔ Model abstraction
+✔ Mock model
+✔ Clean Agent API
+✔ Good documentation
+✔ Observability via Trace
+✔ Runnable Examples Directory
+
+---
+
+# 🆕 What "v0.2" Includes
+
+✔ Multi-Agent Graph Orchestration (`AgentGraph`)
+✔ Topological execution with cycle detection
+✔ Clean `add()` / `connect()` / `run()` API
+✔ Graph Agent example
+
+---
+
+# 🧭 Version Milestones
+
+| Version  | Focus                     | Key Deliverable                           |
+| -------- | ------------------------- | ----------------------------------------- |
+| v0.1     | Single Agent Core         | Agent, Tools, Memory, Middleware, Tracing |
+| **v0.2** | **Agent Graph Execution** | **Multi-agent DAG orchestration**         |
+| v0.3     | Model Adapter Expansion   | Anthropic, Gemini, Ollama adapters        |
+| v0.4     | Observability & Debugging | Trace viewer, execution timeline          |
+| v0.5     | Plugin Ecosystem          | Installable community tool packages       |

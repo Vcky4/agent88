@@ -19,3 +19,9 @@ export type { Message, ModelInput } from './types/index.js';
 export { Trace } from './core/execution/Trace.js';
 export type { TraceEvent } from './core/execution/Trace.js';
 export type { ExecutionContext } from './core/execution/ExecutionContext.js';
+
+// Multi-Agent Graph Orchestration
+export { AgentGraph } from './core/graph/AgentGraph.js';
+export { GraphExecutor } from './core/graph/GraphExecutor.js';
+export type { GraphNode } from './core/graph/GraphNode.js';
+export type { GraphEdge } from './core/graph/GraphEdge.js';
