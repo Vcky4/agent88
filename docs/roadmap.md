@@ -234,7 +234,7 @@ We stay disciplined.
 
 ---
 
-# 🎯 What “v0.1” Included
+# 🎯 What “v1.0.1” Included
 
 Minimal but impressive foundations now complete:
 
@@ -249,9 +249,9 @@ Minimal but impressive foundations now complete:
 
 ---
 
-# 🔮 PHASE 8 — Agent Graph Execution (v0.2)
+# 🔮 PHASE 8 — Agent Graph Execution (v1.1)
 
-With the single-agent core stabilized, v0.2 introduces multi-agent orchestration via directed graph execution.
+With the single-agent core stabilized, v1.1 introduces multi-agent orchestration via directed graph execution.
 
 ## 16️⃣ Agent Graph Architecture
 
@@ -277,7 +277,7 @@ graph.connect("analysis", "summary")
 const result = await graph.run("Explain the impact of quantum computing")
 ```
 
-v0.2 ships linear execution. Future iterations will add:
+v1.1 ships linear execution. Future iterations will add:
 
 * Branching & fan-out
 * Parallel agent execution
@@ -286,7 +286,7 @@ v0.2 ships linear execution. Future iterations will add:
 
 ---
 
-# 🔌 PHASE 8.5 — Model Adapter Expansion (v0.3)
+# 🔌 PHASE 8.5 — Model Adapter Expansion (v1.2)
 
 Expand the model ecosystem beyond OpenAI:
 
@@ -304,7 +304,7 @@ This gives Agent88:
 
 ---
 
-# 🧩 PHASE 9 — Observability & Debugging (v0.4)
+# 🧩 PHASE 9 — Observability & Debugging (v1.3)
 
 ## 18️⃣ AgentTraceViewer
 
@@ -316,7 +316,7 @@ Think: LangSmith-like debugging, but lightweight.
 
 ---
 
-# 📦 PHASE 10 — Plugin Ecosystem (v0.5)
+# 📦 PHASE 10 — Plugin Ecosystem (v1.4)
 
 ## 19️⃣ Installable Tool Plugins
 
@@ -346,10 +346,10 @@ Here is the order we should actually build in:
 10. OpenAI adapter
 11. Streaming
 12. Middleware (v1.1)
-13. Agent Graph (v0.2)
-14. Model Adapters — Anthropic, Gemini, Ollama (v0.3)
-15. Tracing & Debugging (v0.4)
-16. Plugin Ecosystem (v0.5)
+13. Agent Graph (v1.1)
+14. Model Adapters — Anthropic, Gemini, Ollama (v1.2)
+15. Tracing & Debugging (v1.3)
+16. Plugin Ecosystem (v1.4)
 
 If we follow this, we will not get lost.
 
@@ -369,7 +369,7 @@ We stay disciplined.
 
 ---
 
-# 🎯 What "v0.1" Included
+# 🎯 What "v1.0.1" Included
 
 Minimal but impressive foundations now complete:
 
@@ -384,7 +384,7 @@ Minimal but impressive foundations now complete:
 
 ---
 
-# 🆕 What "v0.2" Includes
+# 🆕 What "v1.1.0" Includes
 
 ✔ Multi-Agent Graph Orchestration (`AgentGraph`)
 ✔ Topological execution with cycle detection
@@ -395,10 +395,10 @@ Minimal but impressive foundations now complete:
 
 # 🧭 Version Milestones
 
-| Version  | Focus                     | Key Deliverable                           |
-| -------- | ------------------------- | ----------------------------------------- |
-| v0.1     | Single Agent Core         | Agent, Tools, Memory, Middleware, Tracing |
-| **v0.2** | **Agent Graph Execution** | **Multi-agent DAG orchestration**         |
-| v0.3     | Model Adapter Expansion   | Anthropic, Gemini, Ollama adapters        |
-| v0.4     | Observability & Debugging | Trace viewer, execution timeline          |
-| v0.5     | Plugin Ecosystem          | Installable community tool packages       |
+| Version    | Focus                     | Key Deliverable                           |
+| ---------- | ------------------------- | ----------------------------------------- |
+| v1.0.1     | Single Agent Core         | Agent, Tools, Memory, Middleware, Tracing |
+| **v1.1.0** | **Agent Graph Execution** | **Multi-agent DAG orchestration**         |
+| v1.2.0     | Model Adapter Expansion   | Anthropic, Gemini, Ollama adapters        |
+| v1.3.0     | Observability & Debugging | Trace viewer, execution timeline          |
+| v1.4.0     | Plugin Ecosystem          | Installable community tool packages       |
