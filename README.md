@@ -93,13 +93,13 @@ Explore our detailed guides:
 
 Agent88 is in active development.
 
-| Version  | Focus                                                             | Status    |
-| -------- | ----------------------------------------------------------------- | --------- |
-| **v0.1** | Single Agent Core (Execution, Tools, Memory, Middleware, Tracing) | ✅ Shipped |
-| **v0.2** | Agent Graph Orchestration (`AgentGraph`)                          | ✅ Shipped |
-| **v0.3** | Model Adapter Expansion (Anthropic, Gemini, Ollama)               | ✅ Shipped |
-| v0.4     | Observability & Debugging                                         | Planned   |
-| v0.5     | Plugin Ecosystem                                                  | Planned   |
+| Version    | Focus                                                             | Status        |
+| ---------- | ----------------------------------------------------------------- | ------------- |
+| **v1.0.1** | Single Agent Core (Execution, Tools, Memory, Middleware, Tracing) | ✅ Shipped     |
+| **v1.1.0** | Agent Graph Orchestration (`AgentGraph`)                          | ✅ Shipped     |
+| **v1.2.0** | Model Adapter Expansion (Gemini ✅, Anthropic 🔜, Ollama 🔜)         | 🚧 In Progress |
+| v1.3.0     | Observability & Debugging                                         | Planned       |
+| v1.4.0     | Plugin Ecosystem                                                  | Planned       |
 
 View the full **[Engineering Roadmap](docs/roadmap.md)**.
 
