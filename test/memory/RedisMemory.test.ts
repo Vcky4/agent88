@@ -5,13 +5,15 @@ import type { Message } from '../../src/types/index.js';
 // Mock the ioredis module so we don't need a real Redis server for unit tests
 const store = new Map<string, string>();
 vi.mock('ioredis', () => {
+    class MockRedis {
+        async get(key: string) { return store.get(key) || null; }
+        async set(key: string, value: string) { store.set(key, value); return 'OK'; }
+        async del(key: string) { store.delete(key); return 1; }
+        disconnect() { }
+    }
     return {
-        Redis: class MockRedis {
-            async get(key: string) { return store.get(key) || null; }
-            async set(key: string, value: string) { store.set(key, value); return 'OK'; }
-            async del(key: string) { store.delete(key); return 1; }
-            disconnect() { }
-        }
+        default: { Redis: MockRedis },
+        Redis: MockRedis
     };
 });
 

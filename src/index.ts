@@ -5,6 +5,7 @@ export type { AgentConfig } from './core/Agent.js';
 
 export type { BaseModel, ModelGenerateOptions, ModelResponse } from './core/models/BaseModel.js';
 export { OpenAIModel } from './core/models/OpenAIModel.js';
+export { GeminiModel } from './core/models/GeminiModel.js';
 
 export type { Tool } from './core/tools/Tool.js';
 

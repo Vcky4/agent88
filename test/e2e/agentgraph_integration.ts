@@ -1,6 +1,7 @@
 import { Agent } from "../../src/core/Agent.js";
 import { AgentGraph } from "../../src/core/graph/AgentGraph.js";
 import { OpenAIModel } from "../../src/core/models/OpenAIModel.js";
+import { GeminiModel } from "../../src/core/models/GeminiModel.js";
 import type { Tool } from "../../src/core/tools/Tool.js";
 import * as dotenv from "dotenv";
 
@@ -32,16 +33,17 @@ const factLookupTool: Tool = {
 };
 
 async function run() {
-    if (!process.env.OPENAI_API_KEY) {
-        console.error("Please set OPENAI_API_KEY environment variable to run this test.");
+    if (!process.env.OPENAI_API_KEY || !process.env.GEMINI_API_KEY) {
+        console.error("Please set OPENAI_API_KEY and GEMINI_API_KEY environment variables to run this mixed-model test.");
         process.exit(1);
     }
 
-    const apiKey = process.env.OPENAI_API_KEY;
+    const openAiKey = process.env.OPENAI_API_KEY;
+    const geminiKey = process.env.GEMINI_API_KEY;
 
-    // Stage 1 — Research Agent: gathers facts via tool
+    // Stage 1 — Research Agent: gathers facts via tool (using OpenAI)
     const researchAgent = new Agent({
-        model: new OpenAIModel(apiKey),
+        model: new OpenAIModel(openAiKey),
         systemPrompt:
             "You are a research specialist. " +
             "You MUST call the factLookup tool before responding. " +
@@ -49,18 +51,18 @@ async function run() {
     });
     researchAgent.registerTool(factLookupTool);
 
-    // Stage 2 — Analysis Agent: distills the most impactful insight
+    // Stage 2 — Analysis Agent: distills the most impactful insight (using Gemini)
     const analysisAgent = new Agent({
-        model: new OpenAIModel(apiKey),
+        model: new GeminiModel(geminiKey),
         systemPrompt:
             "You are an analyst. " +
             "Given research bullet points, identify the single most impactful finding " +
             "and explain why in 2-3 sentences."
     });
 
-    // Stage 3 — Summary Agent: produces a one-line executive brief
+    // Stage 3 — Summary Agent: produces a one-line executive brief (using OpenAI)
     const summaryAgent = new Agent({
-        model: new OpenAIModel(apiKey),
+        model: new OpenAIModel(openAiKey),
         systemPrompt:
             "You are an executive summarizer. " +
             "Given an analysis, produce a single-sentence executive brief."

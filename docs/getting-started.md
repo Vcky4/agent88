@@ -11,7 +11,7 @@ This guide will walk you through building your first agent, plugging in tools, a
 Before you begin, ensure you have:
 * **Node.js**: v18 or later
 * **TypeScript**: Because Agent88 is strictly typed
-* **OpenAI API Key**: For the `OpenAIModel` adapter
+* **API Keys**: OpenAI (`OPENAI_API_KEY`) or Gemini (`GEMINI_API_KEY`)
 
 ---
 
@@ -30,7 +30,7 @@ pnpm add agent88
 yarn add agent88
 ```
 
-*(Note: Agent88 uses a pluggable adapter pattern. If you plan to use the `OpenAIModel` adapter, you will also need to install the `openai` package as a peer dependency: `npm install openai`)*
+*(Note: Agent88 uses a pluggable adapter pattern. Depending on your model choice, you will also need to install the peer dependency: `npm install openai` or `npm install @google/generative-ai`)*
 
 ---
 
@@ -63,6 +63,8 @@ Run it (make sure you have your environment variables set):
 ```bash
 OPENAI_API_KEY="sk-..." npx tsx index.ts
 ```
+
+*(You can seamlessly swap `OpenAIModel` with `GeminiModel(process.env.GEMINI_API_KEY!)` if you prefer Google's logic!)*
 
 ---
 
@@ -161,18 +163,19 @@ async function streamExample() {
 For complex workflows, compose multiple agents into a pipeline using `AgentGraph`. Each agent's output is piped as the input to the next.
 
 ```typescript
-import { Agent, AgentGraph, OpenAIModel } from "agent88";
+import { Agent, AgentGraph, OpenAIModel, GeminiModel } from "agent88";
 
-const apiKey = process.env.OPENAI_API_KEY!;
+const openAiKey = process.env.OPENAI_API_KEY!;
+const geminiKey = process.env.GEMINI_API_KEY!;
 
-// Create specialized agents
+// Create specialized agents (You can mix models!)
 const researchAgent = new Agent({
-    model: new OpenAIModel(apiKey),
+    model: new OpenAIModel(openAiKey),
     systemPrompt: "You are a researcher. Provide 3 key facts on the given topic."
 });
 
 const summaryAgent = new Agent({
-    model: new OpenAIModel(apiKey),
+    model: new GeminiModel(geminiKey),
     systemPrompt: "You are a summarizer. Condense the input into one sentence."
 });
 

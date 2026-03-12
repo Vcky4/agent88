@@ -40,6 +40,7 @@
     "@types/ioredis": "^4.28.10",
     "@types/node": "^25.3.3",
     "dotenv": "^17.3.1",
+    "openai": "^6.27.0",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
@@ -56,5 +57,8 @@
     "openai": {
       "optional": true
     }
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1"
   }
 }

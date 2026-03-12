@@ -4,7 +4,7 @@ Complete, runnable examples showing how to build agents with Agent88.
 
 > **💡 Note:** You can run all of these examples directly from the repository! Just clone Agent88 and look inside the `examples/` directory. Run them like this: `npx tsx examples/tool-agent/weather-agent.ts`
 
-> **Prerequisites:** All examples require an OpenAI API key set as `OPENAI_API_KEY` in your environment or `.env` file.
+> **Prerequisites:** All examples require an OpenAI API key set as `OPENAI_API_KEY` in your environment or `.env` file. Some advanced examples also require `GEMINI_API_KEY`.
 
 ---
 
@@ -199,13 +199,14 @@ agent.use(async (ctx, next) => {
 Chain multiple specialized agents into a **research → analysis → summary** pipeline using `AgentGraph`. Each agent's output automatically feeds into the next.
 
 ```typescript
-import { Agent, AgentGraph, OpenAIModel } from "agent88";
+import { Agent, AgentGraph, OpenAIModel, GeminiModel } from "agent88";
 
-const apiKey = process.env.OPENAI_API_KEY!;
+const openAiKey = process.env.OPENAI_API_KEY!;
+const geminiKey = process.env.GEMINI_API_KEY!;
 
-// Stage 1 — Research Agent (with a tool)
+// Stage 1 — Research Agent (with a tool) using OpenAI
 const researchAgent = new Agent({
-    model: new OpenAIModel(apiKey),
+    model: new OpenAIModel(openAiKey),
     systemPrompt: "You are a researcher. Use the factLookup tool, then summarize in 3 bullet points."
 });
 
@@ -220,15 +221,15 @@ researchAgent.registerTool({
     execute: async ({ topic }) => `Key facts about ${topic}: quantum supremacy, post-quantum crypto, qubit scaling.`
 });
 
-// Stage 2 — Analysis Agent
+// Stage 2 — Analysis Agent using Gemini
 const analysisAgent = new Agent({
-    model: new OpenAIModel(apiKey),
+    model: new GeminiModel(geminiKey),
     systemPrompt: "You are an analyst. Identify the most impactful finding and explain why."
 });
 
 // Stage 3 — Summary Agent
 const summaryAgent = new Agent({
-    model: new OpenAIModel(apiKey),
+    model: new OpenAIModel(openAiKey),
     systemPrompt: "You are a summarizer. Produce a one-sentence executive brief."
 });
 
