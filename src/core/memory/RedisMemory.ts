@@ -1,16 +1,18 @@
-import { Redis } from 'ioredis';
-import type { RedisOptions } from 'ioredis';
+import RedisImport from 'ioredis';
+// @ts-ignore - Deal with ioredis export and type conflicts
+const Redis = RedisImport.default || RedisImport.Redis || RedisImport;
+import type { Redis as RedisType, RedisOptions } from 'ioredis';
 import type { MemoryAdapter, Message } from '../../types/index.js';
 
 export class RedisMemory implements MemoryAdapter {
-    private redis: Redis;
+    private redis: RedisType;
 
     /**
      * @param options Either an existing ioredis instance, a connection string, or RedisOptions
      */
-    constructor(options?: Redis | string | RedisOptions) {
-        if (options instanceof Redis) {
-            this.redis = options;
+    constructor(options?: RedisType | string | RedisOptions) {
+        if (options && options instanceof Redis) {
+            this.redis = options as RedisType;
         } else if (typeof options === 'string') {
             this.redis = new Redis(options);
         } else {
