@@ -31,9 +31,9 @@ We separate the execution layer, memory layers, and LLM models from your agent d
 ## Installation
 
 ```bash
-npm install agent88 openai
+npm install agent88 openai @google/generative-ai
 ```
-*(Agent88 uses a pluggable adapter pattern. `openai` is required if using the `OpenAIModel` adapter.)*
+*(Agent88 uses a pluggable adapter pattern. `openai` is required for `OpenAIModel`, and `@google/generative-ai` is required for `GeminiModel`.)*
 
 ---
 
@@ -42,10 +42,16 @@ npm install agent88 openai
 A complete agent execution in under 10 lines of code.
 
 ```typescript
-import { Agent, OpenAIModel } from "agent88";
+import { Agent, OpenAIModel, GeminiModel } from "agent88";
 
+// You can use OpenAI...
 const agent = new Agent({
   model: new OpenAIModel(process.env.OPENAI_API_KEY!)
+});
+
+// ...or Google Gemini!
+const geminiAgent = new Agent({
+  model: new GeminiModel(process.env.GEMINI_API_KEY!)
 });
 
 const result = await agent.run("Explain AI agents simply.");
@@ -59,6 +65,7 @@ console.log(result);
 We firmly believe frameworks grow through examples. You can find ready-to-run agents in our repository's `examples/` directory:
 
 - 🟢 `examples/basic-agent/index.ts` — The massive 10-line minimum viability implementation.
+- 🚀 `examples/gemini-agent/index.ts` — A basic agent utilizing Google's Gemini models.
 - 🛠️ `examples/tool-agent/weather-agent.ts` — An agent that detects when to trigger a weather-lookup tool to fulfill requests.
 - 🧠 `examples/memory-agent/chat-agent.ts` — A streaming, persistent conversational agent utilizing the In-Memory cache adapter.
 - 📋 `examples/tool-agent/planner-agent.ts` — A multi-iteration task tracking agent doing chain-of-thought tool execution.
@@ -90,7 +97,7 @@ Agent88 is in active development.
 | -------- | ----------------------------------------------------------------- | --------- |
 | **v0.1** | Single Agent Core (Execution, Tools, Memory, Middleware, Tracing) | ✅ Shipped |
 | **v0.2** | Agent Graph Orchestration (`AgentGraph`)                          | ✅ Shipped |
-| v0.3     | Model Adapter Expansion (Anthropic, Gemini, Ollama)               | 🔜 Next    |
+| **v0.3** | Model Adapter Expansion (Anthropic, Gemini, Ollama)               | ✅ Shipped |
 | v0.4     | Observability & Debugging                                         | Planned   |
 | v0.5     | Plugin Ecosystem                                                  | Planned   |
 

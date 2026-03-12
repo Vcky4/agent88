@@ -76,7 +76,7 @@ export class GeminiModel implements BaseModel {
         // Filter out system messages as they are handled via systemInstruction
         const conversationMessages = messages.filter(m => m.role !== 'system');
         
-        return conversationMessages.map(m => {
+        return conversationMessages.map((m, i) => {
             const parts: Part[] = [];
 
             if (m.role === 'assistant') {
@@ -98,22 +98,28 @@ export class GeminiModel implements BaseModel {
                 // Agent88 stores the result as a JSON string in block.content
                 let responseObj: any;
                 try {
-                     responseObj = JSON.parse(m.content);
+                     const parsed = JSON.parse(m.content);
+                     if (typeof parsed === 'object' && parsed !== null) {
+                         responseObj = parsed;
+                     } else {
+                         responseObj = { result: parsed };
+                     }
                 } catch {
                      responseObj = { result: m.content };
                 }
 
-                // Since Agent88's Message structure doesn't track which tool name
-                // this result corresponds to directly on the tool message,
-                // we have to infer it or just wrap it generic. In reality, Gemini
-                // needs the original function name. For robust integration, 
-                // we'd look back, but for now we try to extract if execution engine wraps it.
-                // A better approach is to assume the previous message was the function call.
+                let functionName = "unknown_function";
+                // In Agent88, the message immediately preceding a 'tool' message is the 'assistant' message that called it
+                const prev = conversationMessages[i - 1];
+                if (prev && prev.role === 'assistant' && prev.toolCall) {
+                    functionName = prev.toolCall.name;
+                }
+
                 return {
                     role: 'function',
                     parts: [{
                         functionResponse: {
-                            name: "unknown_function", // This might need refinement based on Agent88 internals
+                            name: functionName,
                             response: responseObj
                         }
                     }]
