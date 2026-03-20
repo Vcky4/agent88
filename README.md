@@ -54,6 +54,11 @@ const geminiAgent = new Agent({
   model: new GeminiModel(process.env.GEMINI_API_KEY!)
 });
 
+// ...or Ollama for local execution!
+const ollamaAgent = new Agent({
+  model: new OllamaModel("llama3.1")
+});
+
 const result = await agent.run("Explain AI agents simply.");
 console.log(result);
 ```
@@ -97,7 +102,7 @@ Agent88 is in active development.
 | ---------- | ----------------------------------------------------------------- | ------------- |
 | **v1.0.1** | Single Agent Core (Execution, Tools, Memory, Middleware, Tracing) | ✅ Shipped     |
 | **v1.1.0** | Agent Graph Orchestration (`AgentGraph`)                          | ✅ Shipped     |
-| **v1.2.0** | Model Adapter Expansion (Gemini ✅, Anthropic 🔜, Ollama 🔜)         | 🚧 In Progress |
+| **v1.2.0** | Model Adapter Expansion (Gemini ✅, Ollama ✅, Anthropic 🔜)         | ✅ Shipped     |
 | v1.3.0     | Observability & Debugging                                         | Planned       |
 | v1.4.0     | Plugin Ecosystem                                                  | Planned       |
 
