@@ -1,6 +1,11 @@
+src/
 test/
-examples/
 tests/
+examples/
+docs/
 .env
+.env.*
 .github/
 .vscode/
+tsconfig.json
+tsup.config.ts

@@ -232,11 +232,11 @@ Abstracts away specific LLM providers, allowing developers to switch models seam
 Current implementations:
 * **MockModel**: Built-in mock model for running robust unit tests, tool verification, and iteration logic without incurring API fees.
 * **OpenAIModel**: Concrete adapter supporting full recursive conversation loops, structured tool execution via the OpenAI Chat Completions API, and native token streaming via `generateStream()`.
+* **GeminiModel**: Google Gemini adapter with full tool execution and streaming support. Bridges Protobuf struct constraints under the `@google/generative-ai` SDK.
+* **OllamaModel**: Local LLM execution via Ollama's Chat API. Zero external dependencies — uses native `fetch`. Includes `checkConnection()` for service health checks, full tool execution, and streaming.
 
 Future:
 * **AnthropicModel**: Claude 3.5 family (cloud)
-* **GeminiModel**: Google Gemini (cloud)
-* **OllamaModel**: Ollama / Llama.cpp (local, private execution)
 
 ---
 

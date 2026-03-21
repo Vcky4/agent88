@@ -4,7 +4,7 @@ Complete, runnable examples showing how to build agents with Agent88.
 
 > **💡 Note:** You can run all of these examples directly from the repository! Just clone Agent88 and look inside the `examples/` directory. Run them like this: `npx tsx examples/tool-agent/weather-agent.ts`
 
-> **Prerequisites:** All examples require an OpenAI API key set as `OPENAI_API_KEY` in your environment or `.env` file. Some advanced examples also require `GEMINI_API_KEY`.
+> **Prerequisites:** Most examples require an OpenAI API key set as `OPENAI_API_KEY` in your environment or `.env` file. Some advanced examples also require `GEMINI_API_KEY`. The Ollama example requires a running [Ollama](https://ollama.com) service instead of an API key.
 
 ---
 
@@ -96,6 +96,52 @@ console.log("Aria:", contextual);
 - `agent.stream()` yields chunks as an `AsyncGenerator<string>` for real-time UIs
 - `InMemoryMemory` tracks conversation history per `contextId`
 - The same `contextId` (`"chat_session"`) links all messages together
+
+---
+
+## 🦙 Ollama Agent (Local LLM)
+
+Run an agent entirely offline using a local Ollama model. No API keys, no cloud — just your machine.
+
+```typescript
+import { Agent, OllamaModel } from "agent88";
+
+const model = new OllamaModel("llama3.1");
+
+// Verify Ollama is running before proceeding
+const isConnected = await model.checkConnection();
+if (!isConnected) {
+    console.error("❌ Ollama is not running. Start it first!");
+    process.exit(1);
+}
+
+const agent = new Agent({
+    model,
+    systemPrompt: "You are a helpful local AI assistant running via Agent88."
+});
+
+// Standard run
+const response = await agent.run("Tell me one sentence about why local LLMs are cool.");
+console.log("Agent:", response);
+
+// Streaming run
+process.stdout.write("Agent: ");
+const stream = agent.stream("Explain what Agent88 is in 2 sentences.");
+for await (const chunk of stream) {
+    process.stdout.write(chunk);
+}
+console.log();
+```
+
+**Prerequisites:**
+1. [Install Ollama](https://ollama.com)
+2. Pull a model: `ollama pull llama3.1`
+3. Make sure Ollama is running (default: `http://localhost:11434`)
+
+**Key concepts demonstrated:**
+- `OllamaModel` uses native `fetch` — zero npm dependencies
+- `checkConnection()` verifies the Ollama service is up before running
+- Streaming works identically to cloud models via `agent.stream()`
 
 ---
 

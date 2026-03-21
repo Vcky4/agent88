@@ -11,7 +11,7 @@ This guide will walk you through building your first agent, plugging in tools, a
 Before you begin, ensure you have:
 * **Node.js**: v18 or later
 * **TypeScript**: Because Agent88 is strictly typed
-* **API Keys**: OpenAI (`OPENAI_API_KEY`) or Gemini (`GEMINI_API_KEY`)
+* **API Keys**: OpenAI (`OPENAI_API_KEY`) or Gemini (`GEMINI_API_KEY`) — *or* **Ollama** for fully local execution (no API key needed)
 
 ---
 
@@ -30,7 +30,7 @@ pnpm add agent88
 yarn add agent88
 ```
 
-*(Note: Agent88 uses a pluggable adapter pattern. Depending on your model choice, you will also need to install the peer dependency: `npm install openai` or `npm install @google/generative-ai`)*
+*(Note: Agent88 uses a pluggable adapter pattern. Depending on your model choice, you may also need a peer dependency: `npm install openai` for OpenAI, or `npm install @google/generative-ai` for Gemini. Ollama requires no additional packages — just a running Ollama service.)*
 
 ---
 
@@ -65,6 +65,38 @@ OPENAI_API_KEY="sk-..." npx tsx index.ts
 ```
 
 *(You can seamlessly swap `OpenAIModel` with `GeminiModel(process.env.GEMINI_API_KEY!)` if you prefer Google's logic!)*
+
+---
+
+## 3b. Local Agent with Ollama
+
+Prefer to run models locally? Use the `OllamaModel` adapter — no API keys required.
+
+**Prerequisites:** [Install Ollama](https://ollama.com) and pull a model: `ollama pull llama3.1`
+
+```typescript
+import { Agent, OllamaModel } from "agent88";
+
+async function main() {
+    const model = new OllamaModel("llama3.1");
+
+    // Verify Ollama is running
+    if (!await model.checkConnection()) {
+        console.error("Ollama is not running. Start it first!");
+        process.exit(1);
+    }
+
+    const agent = new Agent({
+        model,
+        systemPrompt: "You are a helpful local AI assistant."
+    });
+
+    const response = await agent.run("What is Agent88?");
+    console.log(response);
+}
+
+main().catch(console.error);
+```
 
 ---
 

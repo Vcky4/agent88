@@ -290,16 +290,16 @@ v1.1 ships linear execution. Future iterations will add:
 
 Expand the model ecosystem beyond OpenAI:
 
-## 17️⃣ Additional Model Adapters (🚧 In Progress)
+## 17️⃣ Additional Model Adapters (✅ Complete)
 
 * 🔜 `AnthropicModel` — Claude 3.5 family (cloud)
 * ✅ `GeminiModel` — Google Gemini (cloud)
-* 🔜 `OllamaModel` — Ollama / Llama.cpp (local, private execution)
+* ✅ `OllamaModel` — Ollama / Llama.cpp (local, private execution)
 
 This gives Agent88:
 
-* ✅ Cloud models
-* ✅ Local models
+* ✅ Cloud models (OpenAI, Gemini)
+* ✅ Local models (Ollama)
 * ✅ Open ecosystem
 
 ---
@@ -393,12 +393,22 @@ Minimal but impressive foundations now complete:
 
 ---
 
+# 🆕 What "v1.2.0" Includes
+
+✔ GeminiModel adapter — full tool execution & streaming via `@google/generative-ai`
+✔ OllamaModel adapter — local LLM execution via Ollama Chat API (zero dependencies)
+✔ `checkConnection()` utility for Ollama service health checks
+✔ Heterogeneous multi-model orchestration in `AgentGraph`
+✔ Ollama agent example (`examples/ollama-agent/`)
+
+---
+
 # 🧭 Version Milestones
 
-| Version    | Focus                     | Key Deliverable                           |
-| ---------- | ------------------------- | ----------------------------------------- |
-| v1.0.1     | Single Agent Core         | Agent, Tools, Memory, Middleware, Tracing |
-| **v1.1.0** | **Agent Graph Execution** | **Multi-agent DAG orchestration**         |
-| **v1.2.0** | Model Adapter Expansion   | Gemini adapter (Anthropic/Ollama pending) |
-| v1.3.0     | Observability & Debugging | Trace viewer, execution timeline          |
-| v1.4.0     | Plugin Ecosystem          | Installable community tool packages       |
+| Version    | Focus                     | Key Deliverable                                  |
+| ---------- | ------------------------- | ------------------------------------------------ |
+| v1.0.1     | Single Agent Core         | Agent, Tools, Memory, Middleware, Tracing        |
+| **v1.1.0** | **Agent Graph Execution** | **Multi-agent DAG orchestration**                |
+| **v1.2.0** | **Model Adapter Expansion** | **Gemini + Ollama adapters shipped**           |
+| v1.3.0     | Observability & Debugging | Trace viewer, execution timeline                 |
+| v1.4.0     | Plugin Ecosystem          | Installable community tool packages              |

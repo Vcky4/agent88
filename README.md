@@ -42,7 +42,7 @@ npm install agent88 openai @google/generative-ai
 A complete agent execution in under 10 lines of code.
 
 ```typescript
-import { Agent, OpenAIModel, GeminiModel } from "agent88";
+import { Agent, OpenAIModel, GeminiModel, OllamaModel } from "agent88";
 
 // You can use OpenAI...
 const agent = new Agent({
@@ -71,6 +71,7 @@ We firmly believe frameworks grow through examples. You can find ready-to-run ag
 
 - 🟢 `examples/basic-agent/index.ts` — The massive 10-line minimum viability implementation.
 - 🚀 `examples/gemini-agent/index.ts` — A basic agent utilizing Google's Gemini models.
+- 🦙 `examples/ollama-agent/index.ts` — A local agent running on Ollama with connection check and streaming.
 - 🛠️ `examples/tool-agent/weather-agent.ts` — An agent that detects when to trigger a weather-lookup tool to fulfill requests.
 - 🧠 `examples/memory-agent/chat-agent.ts` — A streaming, persistent conversational agent utilizing the In-Memory cache adapter.
 - 📋 `examples/tool-agent/planner-agent.ts` — A multi-iteration task tracking agent doing chain-of-thought tool execution.

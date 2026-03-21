@@ -14,7 +14,8 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "CHANGELOG.md"
   ],
   "directories": {
     "doc": "docs"
@@ -28,7 +29,21 @@
     "type": "git",
     "url": "git+https://github.com/Vcky4/agent88.git"
   },
-  "keywords": [],
+  "keywords": [
+    "ai",
+    "agent",
+    "llm",
+    "openai",
+    "gemini",
+    "ollama",
+    "multi-agent",
+    "orchestration",
+    "tools",
+    "middleware",
+    "streaming",
+    "typescript",
+    "framework"
+  ],
   "author": "Victor Okon",
   "license": "MIT",
   "type": "module",
