@@ -28,7 +28,7 @@ async function main() {
     });
 
     console.log("\n--- Testing Standard Execution ---");
-    const response = await agent.run("Tell me one sentence about why local LLMs are cool.");
+    const response = await agent.run("Tell me one sentence about why local LLMs are cool, and what makes them the future");
     console.log("Agent:", response);
 
     console.log("\n--- Testing Streaming Execution ---");
